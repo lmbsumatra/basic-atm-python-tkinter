@@ -1,7 +1,0 @@
-# hi si missy tohh
-# hi si missy tohh
-# hi si missy tohh
-# hi si missy tohh
-# hi si missy tohh
-
-# na push na ba??????????????
