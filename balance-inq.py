@@ -18,8 +18,8 @@ def getData():
     data = xl.active
 
     acctno_column = data['A']           # get data from A column
-
-
+    sheet = Workbook.worksheets[1]
+    print("here",sheet)
     # parang may ibang way pa na mas maganda to find data? ayaw lang i-type ng daliri ko 
     for x in range(len(acctno_column)):
         if acct_no == acctno_column[x].value:
