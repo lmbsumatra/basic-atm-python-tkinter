@@ -31,7 +31,7 @@ Num_entry.place(x=250,y=200,width=150)
 
         
 #email        
-LblEmail = Label(self, text="Email",width=20,font=("bold", 10)) 
+LblEmail = Label(self, text="Email",width=20,font=("bold", 10))  
 LblEmail.place(x=69,y=250) 
         
 email_entry = Entry(self)  
