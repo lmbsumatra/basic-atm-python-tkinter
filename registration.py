@@ -61,4 +61,3 @@ Button(self, text='Register',width=20,bg='black',fg='white', command=Register).p
 
 
 self.mainloop()  
-
