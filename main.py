@@ -1,7 +1,7 @@
+
 from tkinter import *
 import tkinter.messagebox
 import openpyxl
-from tkinter import messagebox
 root = Tk()
 
 class ATMapp:
@@ -128,48 +128,75 @@ class ATMapp:
         master.geometry('500x400')
         master.resizable(0,0)
 
-        myLabel = Label(master, text = "Registration Form", width=20, font=("bold", 20))
+        myLabel = Label(self, text = "Registration Form", width=20, font=("bold", 20))
         myLabel.place(x=97,y=20)
-                
+
+
+        #Id number
+        LblId = Label(self, text="ID Number",width=20,font=("bold", 10))  
+        LblId.place(x=80,y=100) 
+
+        Id_entry = IntVar        
+        Id_entry = Entry(self)  
+        Id_entry.place(x=250,y=100,width=150)   
+   
+        
         #fullname        
-        LblFullname = Label(master, text="FullName",width=20,font=("bold", 10))  
-        LblFullname.place(x=80,y=80) 
-                
-        Fullname_entry = Entry(master)  
-        Fullname_entry.place(x=250,y=80,width=150)  
-                
+        LblFullname = Label(self, text="Full Name",width=20,font=("bold", 10))  
+        LblFullname.place(x=80,y=150) 
+
+        Fullname_entry = StringVar        
+        Fullname_entry = Entry(self)  
+        Fullname_entry.place(x=250,y=150,width=150)  
+
+        
         #password        
-        LblPassword = Label(master, text="Password",width=20,font=("bold", 10))  
-        LblPassword.place(x=80,y=130) 
-                
-        Password_entry = Entry(master)  
-        Password_entry.place(x=250,y=130,width=150)  
+        LblPassword = Label(self, text="Password",width=20,font=("bold", 10))  
+        LblPassword.place(x=80,y=200) 
+
+        Password_entry = StringVar        
+        Password_entry = Entry(self)  
+        Password_entry.place(x=250,y=200,width=150)  
 
         #contact number
-        LblNum = Label(master, text="Contact number",width=20,font=("bold", 10))  
-        LblNum.place(x=95,y=180) 
-                
-        Num_entry = Entry(master)  
-        Num_entry.place(x=250,y=180,width=150) 
+        LblNum = Label(self, text="Contact number",width=20,font=("bold", 10))  
+        LblNum.place(x=95,y=250) 
 
+        Num_entry = IntVar         
+        Num_entry = Entry(self)  
+        Num_entry.place(x=250,y=250,width=150) 
+
+        
         #email        
-        LblEmail = Label(master, text="Email",width=20,font=("bold", 10)) 
-        LblEmail.place(x=69,y=220) 
-                
-        email_entry = Entry(master)  
-        email_entry.place(x=250,y=220,width=150) 
-   
+        LblEmail = Label(self, text="Email",width=20,font=("bold", 10))  
+        LblEmail.place(x=66,y=300) 
+
+        Email_entry = StringVar         
+        Email_entry = Entry(self)  
+        Email_entry.place(x=250,y=300,width=150) 
+
+
+        #balance        
+        LblBal = Label(self, text="Balance",width=20,font=("bold", 10))  
+        LblBal.place(x=71,y=350) 
+
+        Bal_entry = DoubleVar         
+        Bal_entry = Entry(self)  
+        Bal_entry.place(x=250,y=350,width=150) 
+
+        
         #gender        
-        LblGender = Label(master, text="Gender",width=20,font=("bold", 10))  
-        LblGender.place(x=72,y=280)
-                
+        LblGender = Label(self, text="Gender",width=20,font=("bold", 10))  
+        LblGender.place(x=69,y=400)
+        
         Gender = IntVar()
-        Radiobutton(master, text="Male",padx = 10, variable=Gender, value=1).place(x=243,y=280)
-        Radiobutton(master, text="Female",padx = 20, variable=Gender, value=2).place(x=300,y=280)  
+        Radiobutton(self, text="Male",padx = 10, variable=Gender, value=1).place(x=243,y=400)
+        Radiobutton(self, text="Female",padx = 20, variable=Gender, value=2).place(x=300,y=400)  
+
 
         #terms and condition
-        terms_con = Checkbutton(master, text='I agree to the ATM Machine Terms & Conditions.',font=("Bold",10))
-        terms_con.grid(row=8,column=1,padx=120,pady=310)
+        terms_con = Checkbutton(self, text='I agree to the ATM Machine Terms & Conditions.',font=("Bold",10))
+        terms_con.grid(row=8,column=1,padx=120,pady=450)
             
         def Register():
             reg_data = []
