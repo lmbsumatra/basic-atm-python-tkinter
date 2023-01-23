@@ -1,7 +1,7 @@
 from tkinter import *
 import tkinter.messagebox
 import openpyxl
-
+from tkinter import messagebox
 root = Tk()
 
 class ATMapp:
@@ -17,6 +17,8 @@ class ATMapp:
     login_img = PhotoImage(file = 'button_log-in.png')
     reg_img = PhotoImage(file = 'button_register.png')
     reg2_img = PhotoImage(file = 'button_register (1).png')
+    dep_img = PhotoImage(file ='button_depo.png')
+    cancel_img = PhotoImage(file = 'button_cancel.png')
 
     xlfile = "g9db.xlsx"    # file name
     green = '#3aa15c' # color
@@ -282,8 +284,8 @@ class ATMapp:
         master.geometry('500x400')
         master.resizable(0,0)
         
-        master.title("ATM MACHINE")
-        frame.configure(bg="sky blue")
+        master.title("DSA ATM MACHINE")
+        frame.configure(bg="#d9d9d9")
         amount = StringVar()
         
         amount = StringVar()
@@ -292,32 +294,49 @@ class ATMapp:
         acca = acca + balance
 
         def deposit():
-            amo = (amount.get())
-            bal = acca + int(amo)
-            label3.config(text=(f"Current Balance: {bal}"))
+            try:
+                amo = (amount.get())
+                bal = acca + int(amo)
+                depEntry.config(text=(f"Current Balance: {bal}"))
 
-            # self.user_infos[7] = bal
-            self.user_infos.pop(7)
-            self.user_infos.insert(7, bal)
+                # self.user_infos[7] = bal
+                self.user_infos.pop(7)
+                self.user_infos.insert(7, bal)
 
-            # connect to db
-            xl = openpyxl.load_workbook(self.xlfile)
-            data = xl.active
+                # connect to db
+                xl = openpyxl.load_workbook(self.xlfile)
+                data = xl.active
 
-            change = 'H'+str(row_no)
-            data[change].value = bal
+                change = 'H'+str(row_no)
+                data[change].value = bal
 
-            xl.save(self.xlfile)
+                xl.save(self.xlfile)
+            except  ValueError:
+                messagebox.showerror("Error", "Please enter an amount only!")
 
-        lab = Label (text = "Deposit Account",font= 'arial 17', bg = "red", bd=10).pack()
-        lbl = Label(text = "Enter amount to deposit",font ='arial 16 bold', bg ="sky blue", anchor = 'w').place(x=148, y = 70)
-        text = Entry (font ='arial 16', textvariable =amount, fg = "black", bg = "white", bd=5, insertwidth=4, justify='right').place(x=150, y = 120, width=250,height=50)
-        label3 = Label(font ='arial 16', fg='black', bg = "sky blue")
-        label3.place(x = 152, y = 180)
 
-        # deposit and exit button
-        depbutton = Button(text = "DEPOSIT", font = 'arial 10', padx =2,bg ='limegreen' ,command = deposit).place(x=200, y = 260)
-        exbutton = Button(text = "CANCEL", font = 'arial 10', width = 6, command = lambda: self.optionPg(master), bg = 'red').place(x=200, y = 290)
+
+        depacc_Label = Label (width = 43, text = "Deposit Account",pady = 5, font = ("Times New Roman", 16, 'bold'), background="#d63a3a", foreground="white")
+        depacc_Label.grid(row = 1, column = 0, columnspan = 3, pady = 30, padx = 10)
+
+        depentlbl = Label(text = "Enter an amount to deposit",font = ("Times New Roman", 15), bg ="#d9d9d9", anchor = 'w')
+        depentlbl.place(x=155, y = 90)
+
+        depEntry = Entry (font = ("Times New Roman", 14), textvariable =amount, fg = "black", bg = "white", bd=5, insertwidth=4, justify='right')
+        depEntry.place(x=150, y = 120, width=250,height=50)
+
+        # result of the amount deposited
+        depResult = Label( font = ("Times New Roman", 14, 'bold'), fg='black', bg = "#d9d9d9")
+        depResult.place(x = 160, y = 180)
+
+        # deposit button
+        depbutton = Button(master, image = self.dep_img, borderwidth=0, command = deposit)
+        depbutton.place(x = 150, y = 220)
+
+        # exit button
+        exbutton = Button(master, image = self.cancel_img, borderwidth = 0, command = lambda: self.optionPg(master))
+        exbutton.place(x=270, y = 220)
+
 
         root.mainloop()
 
