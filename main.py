@@ -22,7 +22,7 @@ class ATMapp:
     green = '#3aa15c' # color
     red = '#d63a3a'   # color
     font = "Times New Roman"    # font
-    row_no = 0      # user's specific row in database
+    
 
     # where user's info will be appended, can be use in whole class! ;O
     user_infos = []
@@ -34,7 +34,7 @@ class ATMapp:
         frame.place(x=0,y=0)
         master.geometry('500x400')
         master.resizable(0,0)
-        master.title("Danish Bank")
+        master.title("DSA Bank")
         
         # page login label
         label = Label(master, width = 43, text = "Log in", pady = 5, font = (self.font, 16, 'bold'), background = self.red, foreground = "white")
@@ -53,7 +53,7 @@ class ATMapp:
         pwlbl.place(x = 120, y = 175)
 
         # entry box for password
-        input_userpass = Entry(width = 14,font = ('Times New Roman', 20), bd = 0 )
+        input_userpass = Entry(width = 14,show = "*",font = ('Times New Roman', 20), bd = 0 )
         input_userpass.place(x = 235,y = 170)
 
         # log in button
@@ -67,15 +67,18 @@ class ATMapp:
         register_btn.place(x = 300, y = 265)
 
 
-    def getdata(self, user):
+    def getdata(self, user, row):
+        # user's specific row in database
+        global row_no
+        row_no = row
             # user from database append to user_infos to use in whole program
-            for info in user:
-               self.user_infos.append(info)
+        for info in user:
+            self.user_infos.append(info)
 
-            # successful log in! go to option page :)
-            self.optionPg(root)
+        # successful log in! go to option page :)
+        self.optionPg(root)
 
-    def importdata(self, get_username, get_password):
+    def importdata(self, get_username, get_password):   
         # counter for row
         counter = 0
 
@@ -97,17 +100,22 @@ class ATMapp:
             counter = counter + 1
             if o == input_un:
                 # if user is true, append data to db_user list
-                db_user.extend([i, j, k, l, m, n, o, p, q]) 
+                db_user.extend([i, j, k, l, m, n, o, p, q])
                 break
 
-        self.row_no = counter
-
         # checking if login input pw == database pw
-        userpass = str(db_user[8])
-        if input_pw == userpass:
-            # if == call getdata() to save THAT row/user info's
-            self.getdata(db_user)
-
+        if (len(db_user)) == 0 or (len(input_pw)) == 0:
+            tkinter.messagebox.showinfo('Failed','Invalid Login Username or Password')
+        elif (len(db_user[8])) > 0:
+            userpass = str(db_user[8])
+            if input_pw == userpass:
+                # if == call getdata() to save THAT row/user info's
+                self.getdata(db_user, counter)
+            else:
+                tkinter.messagebox.showinfo('Failed','Invalid Login Username or Password')
+        else:
+            tkinter.messagebox.showinfo('Failed','Invalid Login Username or Password')
+        row_no = counter
         root.mainloop()
 
 #################### registration page ####################
@@ -183,7 +191,7 @@ class ATMapp:
         frame.place(x=0,y=0)
         master.geometry('500x400')
         master.resizable(0,0)
-        master.title("Danish Bank")
+        master.title("DSA Bank")
 
         # option page label
         label = Label(master, width = 43, text = "Choose a Transaction", font = (self.font, 25, 'bold'), background = '#d9d9d9', foreground = self.green)
@@ -233,7 +241,7 @@ class ATMapp:
         frame.place(x=0,y=0)
         master.geometry('500x400')
         master.resizable(0,0)
-        master.title("Danish Bank")
+        master.title("DSA Bank")
 
 
         label = Label(master, width = 43, text = "Balance Inquiry", pady = 5, font = (self.font, 16, 'bold'), background = self.red, foreground = "white")
@@ -293,13 +301,13 @@ class ATMapp:
             self.user_infos.insert(7, bal)
 
             # connect to db
-            xl = openpyxl.load_workbook(self.xfile)
+            xl = openpyxl.load_workbook(self.xlfile)
             data = xl.active
 
-            change = 'H'+str(self.row_no)
+            change = 'H'+str(row_no)
             data[change].value = bal
 
-            xl.save(self.xfile)
+            xl.save(self.xlfile)
 
         lab = Label (text = "Deposit Account",font= 'arial 17', bg = "red", bd=10).pack()
         lbl = Label(text = "Enter amount to deposit",font ='arial 16 bold', bg ="sky blue", anchor = 'w').place(x=148, y = 70)
@@ -320,7 +328,7 @@ class ATMapp:
         frame.place(x=0,y=0)
         master.geometry('500x400')
         master.resizable(0,0)
-        master.title("Danish Bank")
+        master.title("DSA Bank")
 
         # change password page label
         label = Label(master, width = 43, text = "Change Password", pady = 5, font = (self.font, 16, 'bold'), background = self.red, foreground = "white")
@@ -331,7 +339,7 @@ class ATMapp:
         acctlbl.place(x = 80, y = 120)
 
         # show account no
-        input_currentpass = Entry(width = 14,font = ('Times New Roman', 20), bd = 0 )
+        input_currentpass = Entry(width = 14, show = "*", font = ('Times New Roman', 20), bd = 0 )
         input_currentpass.place(x = 235,y = 115)
 
         # balance label
@@ -339,15 +347,15 @@ class ATMapp:
         acctlbl.place(x = 80, y = 175)
 
         # show acct balance
-        input_newpass = Entry(width = 14,font = ('Times New Roman', 20), bd = 0 )
+        input_newpass = Entry(width = 14,show = "*",font = ('Times New Roman', 20), bd = 0 )
         input_newpass.place(x = 235,y = 170)
 
         # save password button
         savepass_btn = Button(master, image = self.savepass_img,
-        borderwidth = 0, command = lambda: checkPass())
+        borderwidth = 0, command = lambda: checkPass(row_no))
         savepass_btn.place(x = 180, y = 220)
 
-        def checkPass():
+        def checkPass(row_no):
             # initializing frame 
             check_currentpass = input_currentpass.get()
             check_newpass = input_newpass.get()
@@ -364,7 +372,7 @@ class ATMapp:
                             # check if new pass /= current pass
                             if user_infos_pass != check_newpass:
                                 # open xl
-                                xl = openpyxl.load_workbook(self.xfile)
+                                xl = openpyxl.load_workbook("g9db.xlsx")
                                 data = xl.active
 
                                 # self.user_infos[8] = check_newpass
@@ -372,16 +380,17 @@ class ATMapp:
                                 self.user_infos.insert(8, check_newpass)
 
                                 # changing password from I column in excel
-                                change = 'I'+str(self.row_no)    # change = column value :)
+                                change = 'I'+str(row_no)    # change = column value :)
                                 data[change].value = check_newpass
 
-                                # save
-                                xl.save(self.xfile)
+                                # saveeee
+                                xl.save("g9db.xlsx")
 
                                 tkinter.messagebox.showinfo('Successful','Password Saved!')
                             else: 
                                 tkinter.messagebox.showinfo('Failed','New password is the same as the current password.')
                         else:
+                            # print((str(user_infos[8])).isdigit(), check_currentpass.isdigit())
                             tkinter.messagebox.showinfo('Failed','Current Password is incorrect.')
                     else:
                         tkinter.messagebox.showinfo('Failed','Enter number/s only.')
@@ -393,7 +402,7 @@ class ATMapp:
                 tkinter.messagebox.showinfo('Failed','Current Password/New Password is empty.')   
 
         # note after chaging the password
-        notelbl = Label(master, text = "After changing your password, select CONTINUE.", font = (self.font, 14))
+        notelbl = Label(master, text = "After changing your password, select CONTINUE.", font = ("Times New Roman", 14))
         notelbl.place(x = 80, y = 280)
 
         # continue button to option page
