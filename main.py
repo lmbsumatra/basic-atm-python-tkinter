@@ -1,7 +1,5 @@
-
 from tkinter import *
 import tkinter.messagebox
-from tkinter import messagebox
 import openpyxl
 root = Tk()
 
@@ -17,9 +15,10 @@ class ATMapp:
     savepass_img = PhotoImage(file = 'button_save-password.png')
     login_img = PhotoImage(file = 'button_log-in.png')
     reg_img = PhotoImage(file = 'button_register.png')
-    reg2_img = PhotoImage(file = 'button_register (1).png')
     dep_img = PhotoImage(file ='button_depo.png')
     cancel_img = PhotoImage(file = 'button_cancel.png')
+    reg2_img = PhotoImage(file = 'button_register (2).png')
+    login2_img = PhotoImage(file = 'button_log-in2.png')
 
     xlfile = "g9db.xlsx"    # file name
     green = '#3aa15c' # color
@@ -44,7 +43,7 @@ class ATMapp:
         label.place(x = 10, y = 45)
 
         # username label
-        unlbl = Label(master, text = "Username:", font = (self.font, 13))
+        unlbl = Label(master, text = "Account ID:", font = (self.font, 13))
         unlbl.place(x = 120, y = 120)
 
         # entry box for username
@@ -96,21 +95,20 @@ class ATMapp:
         # opening a excel py
         xl = openpyxl.load_workbook(self.xlfile)
         data = xl.active
-        rws = data.iter_rows(min_row = 1, max_col= 9, max_row = None, min_col = 1, values_only = True)
+        rws = data.iter_rows(min_row = 1, max_col= 7, max_row = None, min_col = 1, values_only = True)
         
         # iterating rows in excel
-        for i, j, k, l, m, n, o, p, q in rws:
+        for i, j, k, l, m, n, o in rws:
             counter = counter + 1
-            if o == input_un:
+            if i == input_un:
                 # if user is true, append data to db_user list
-                db_user.extend([i, j, k, l, m, n, o, p, q])
+                db_user.extend([i, j, k, l, m, n, o])
                 break
-
         # checking if login input pw == database pw
         if (len(db_user)) == 0 or (len(input_pw)) == 0:
             tkinter.messagebox.showinfo('Failed','Invalid Login Username or Password')
-        elif (len(db_user[8])) > 0:
-            userpass = str(db_user[8])
+        elif (len(db_user[2])) > 0:
+            userpass = str(db_user[2])
             if input_pw == userpass:
                 # if == call getdata() to save THAT row/user info's
                 self.getdata(db_user, counter)
@@ -129,88 +127,124 @@ class ATMapp:
         master.geometry('500x400')
         master.resizable(0,0)
 
-        myLabel = Label(self, text = "Registration Form", width=20, font=("bold", 20))
-        myLabel.place(x=97,y=20)
+        # page login label
+        myLabel = Label(master, width = 43, text = "Registration Form", pady = 5, font = (self.font, 16, 'bold'), background = self.red, foreground = "white")
+        myLabel.place(x = 10, y = 45)
 
 
         #Id number
-        LblId = Label(self, text="ID Number",width=20,font=("bold", 10))  
-        LblId.place(x=80,y=100) 
+        LblId = Label(master, text="Account ID",width=20,font=(self.font, 14))  
+        LblId.place(x=63,y=95) 
 
         Id_entry = IntVar        
-        Id_entry = Entry(self)  
-        Id_entry.place(x=250,y=100,width=150)   
+        Id_entry = Entry(master)  
+        Id_entry.place(x=250,y=95,width=150)   
    
         
         #fullname        
-        LblFullname = Label(self, text="Full Name",width=20,font=("bold", 10))  
-        LblFullname.place(x=80,y=150) 
+        LblFullname = Label(master, text="Full Name",width=20,font=(self.font, 14))  
+        LblFullname.place(x=60,y=125) 
 
         Fullname_entry = StringVar        
-        Fullname_entry = Entry(self)  
-        Fullname_entry.place(x=250,y=150,width=150)  
+        Fullname_entry = Entry(master)  
+        Fullname_entry.place(x=250,y=125,width=150)  
 
         
         #password        
-        LblPassword = Label(self, text="Password",width=20,font=("bold", 10))  
-        LblPassword.place(x=80,y=200) 
-
-        Password_entry = StringVar        
-        Password_entry = Entry(self)  
-        Password_entry.place(x=250,y=200,width=150)  
-
-        #contact number
-        LblNum = Label(self, text="Contact number",width=20,font=("bold", 10))  
-        LblNum.place(x=95,y=250) 
-
-        Num_entry = IntVar         
-        Num_entry = Entry(self)  
-        Num_entry.place(x=250,y=250,width=150) 
+        LblPassword = Label(master, text="Password",width=20,font=(self.font, 14))  
+        LblPassword.place(x=56,y=155) 
 
         
-        #email        
-        LblEmail = Label(self, text="Email",width=20,font=("bold", 10))  
-        LblEmail.place(x=66,y=300) 
+        Password_entry = Entry(master)  
+        Password_entry.place(x=250,y=155,width=150)  
 
-        Email_entry = StringVar         
-        Email_entry = Entry(self)  
-        Email_entry.place(x=250,y=300,width=150) 
+        #contact number
+        LblNum = Label(master, text="Contact number",width=20,font=(self.font, 14))  
+        LblNum.place(x=80,y=185) 
+
+        Num_entry = IntVar         
+        Num_entry = Entry(master)  
+        Num_entry.place(x=250,y=185,width=150) 
+        
+        #email        
+        LblEmail = Label(master, text="Age",width=20,font=(self.font, 14))  
+        LblEmail.place(x=43,y=215) 
+
+                
+        Age_entry = Entry(master)  
+        Age_entry.place(x=250,y=215,width=150) 
 
 
         #balance        
-        LblBal = Label(self, text="Balance",width=20,font=("bold", 10))  
-        LblBal.place(x=71,y=350) 
+        LblBal = Label(master, text="Balance",width=20,font=(self.font, 14))  
+        LblBal.place(x=50,y=245) 
 
-        Bal_entry = DoubleVar         
-        Bal_entry = Entry(self)  
-        Bal_entry.place(x=250,y=350,width=150) 
+        Bal_entry = DoubleVar()
+        Bal_entry = Entry(master)  
+        Bal_entry.place(x=250,y=245,width=150) 
 
         
         #gender        
-        LblGender = Label(self, text="Gender",width=20,font=("bold", 10))  
-        LblGender.place(x=69,y=400)
+        LblGender = Label(master, text="Gender",width=20,font=(self.font, 14))  
+        LblGender.place(x=47,y=275)
         
         Gender = IntVar()
-        Radiobutton(self, text="Male",padx = 10, variable=Gender, value=1).place(x=243,y=400)
-        Radiobutton(self, text="Female",padx = 20, variable=Gender, value=2).place(x=300,y=400)  
+        Radiobutton(master, text="Male",padx = 10, variable=Gender, value=1).place(x=243,y=275)
+        Radiobutton(master, text="Female",padx = 20, variable=Gender, value=2).place(x=310,y=275)  
 
-
+        def PopUp():
+            if toggle.get() == 1:
+                 tkinter.messagebox.showinfo("Terms & Condition","Ticking the box is allowing us to collect your personal infos.")
+    
         #terms and condition
-        terms_con = Checkbutton(self, text='I agree to the ATM Machine Terms & Conditions.',font=("Bold",10))
-        terms_con.grid(row=8,column=1,padx=120,pady=450)
+        toggle = IntVar()
+        terms_con = Checkbutton(master, variable=toggle, onvalue=1, text='I agree to the ATM Machine Terms & Conditions.',font=(self.font,10), command=PopUp)
+        terms_con.grid(row=8,column=1,padx=120,pady=320)
+
             
         def Register():
             reg_data = []
-            reg_data.append(Fullname_entry.get())
-            reg_data.append(Password_entry.get())
-            reg_data.append(Num_entry.get())
-            reg_data.append(Email_entry.get())
-            reg_data.append(Gender.get())
-            print(reg_data)
-            tkinter.messagebox.showinfo("Registration","Successfully Registered")
-                
+            
+
+            reg_id = Id_entry.get()
+            reg_name = Fullname_entry.get()
+            reg_pw = Password_entry.get()
+            reg_no = Num_entry.get()
+            reg_age = Age_entry.get()
+            reg_bal = Bal_entry.get()
+            reg_gender = Gender.get()
+            checked = toggle.get()
+
+            
+            if not ((reg_id == '') or (reg_name == '') or (reg_pw== '') or (reg_age == '') or (reg_gender == 0) or (checked == 0) or (reg_bal == '') or (reg_no == '')):
+                if reg_pw.isdigit() and reg_bal.isdigit() and reg_no.isdigit():
+                    if (len(reg_pw) == 5):
+                        if (len(reg_no) == 11):
+                            if int(reg_age) > 17:
+                                tkinter.messagebox.showinfo("Successful","Registration Completed!")
+
+                                reg_data.append(Id_entry.get())
+                                reg_data.append(Fullname_entry.get())
+                                reg_data.append(Password_entry.get())
+                                reg_data.append(Num_entry.get())
+                                reg_data.append(Age_entry.get())
+                                reg_data.append(Bal_entry.get())
+                                reg_data.append(Gender.get())
+                            else:
+                                tkinter.messagebox.showinfo("Warning","You must 18+ to register.")
+                        else:
+                            tkinter.messagebox.showinfo("Warning","Contact Number must be 11 digits.")
+                    else:
+                        tkinter.messagebox.showinfo("Warning","For PASSWORD: Please enter 5 DIGITS only.")
+                else:
+                    tkinter.messagebox.showinfo("Warning","For PASSWORD: Please enter 5 DIGITS only.")
+            else:
+                tkinter.messagebox.showinfo("Failed","Please complete the registration")
+            
+        # back to log in page
+        Button(master, image = self.login2_img, bd = 0, command = lambda: self.__init__(master)).place(x=150,y=350) 
         #for register button
-        Button(master, text='Register',width=20,bg='black',fg='white', command=Register).place(x=180,y=360) 
+        Button(master, image = self.reg2_img, bd = 0, command=Register).place(x=280,y=350) 
 
         root.mainloop()
 
@@ -243,7 +277,7 @@ class ATMapp:
 
         # deposit button
         deposit_btn = Button(master, image = self.deposit_img,
-        borderwidth = 0, command = lambda: self.depositPg(master, self.user_infos[7]))
+        borderwidth = 0, command = lambda: self.depositPg(master, self.user_infos[5]))
         deposit_btn.place(x = 278, y = 175)
 
         # change password button
@@ -290,7 +324,7 @@ class ATMapp:
         acctlbl.place(x = 150, y = 170)
 
         # show acct balance
-        acctno = Label(master, text = self.user_infos[7], font = (self.font, 14, 'bold'))
+        acctno = Label(master, text = self.user_infos[5], font = (self.font, 14, 'bold'))
         acctno.place(x = 275, y = 170)
 
         # note after viewing account balance
@@ -328,19 +362,22 @@ class ATMapp:
                 depEntry.config(text=(f"Current Balance: {bal}"))
 
                 # self.user_infos[7] = bal
-                self.user_infos.pop(7)
-                self.user_infos.insert(7, bal)
+                self.user_infos.pop(5)
+                self.user_infos.insert(5, bal)
 
                 # connect to db
                 xl = openpyxl.load_workbook(self.xlfile)
                 data = xl.active
 
-                change = 'H'+str(row_no)
+                change = 'F'+str(row_no)
                 data[change].value = bal
 
                 xl.save(self.xlfile)
+
+                tkinter.messagebox.showerror("Successful", "Deposit successful!")
+
             except  ValueError:
-                messagebox.showerror("Error", "Please enter an amount only!")
+                tkinter.messagebox.showerror("Error", "Please enter an amount only!")
 
 
 
@@ -406,7 +443,7 @@ class ATMapp:
             # initializing frame 
             check_currentpass = input_currentpass.get()
             check_newpass = input_newpass.get()
-            user_infos_pass = str(self.user_infos[8])
+            user_infos_pass = str(self.user_infos[2])
 
             # # check if not empty
             if (len(check_currentpass)) > 0 and (len(check_newpass) > 0):
@@ -423,11 +460,11 @@ class ATMapp:
                                 data = xl.active
 
                                 # self.user_infos[8] = check_newpass
-                                self.user_infos.pop(8)
-                                self.user_infos.insert(8, check_newpass)
+                                self.user_infos.pop(2)
+                                self.user_infos.insert(2, check_newpass)
 
                                 # changing password from I column in excel
-                                change = 'I'+str(row_no)    # change = column value :)
+                                change = 'C'+str(row_no)    # change = column value :)
                                 data[change].value = check_newpass
 
                                 # saveeee
@@ -437,7 +474,6 @@ class ATMapp:
                             else: 
                                 tkinter.messagebox.showinfo('Failed','New password is the same as the current password.')
                         else:
-                            # print((str(user_infos[8])).isdigit(), check_currentpass.isdigit())
                             tkinter.messagebox.showinfo('Failed','Current Password is incorrect.')
                     else:
                         tkinter.messagebox.showinfo('Failed','Enter number/s only.')
