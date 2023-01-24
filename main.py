@@ -1,6 +1,7 @@
 
 from tkinter import *
 import tkinter.messagebox
+from tkinter import messagebox
 import openpyxl
 root = Tk()
 
@@ -203,7 +204,7 @@ class ATMapp:
             reg_data.append(Fullname_entry.get())
             reg_data.append(Password_entry.get())
             reg_data.append(Num_entry.get())
-            reg_data.append(email_entry.get())
+            reg_data.append(Email_entry.get())
             reg_data.append(Gender.get())
             print(reg_data)
             tkinter.messagebox.showinfo("Registration","Successfully Registered")
