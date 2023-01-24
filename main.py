@@ -404,7 +404,7 @@ class ATMapp:
 
                 xl.save(self.xlfile)
 
-                tkinter.messagebox.showerror("Successful", "Deposit successful!")
+                tkinter.messagebox.showinfo("Successful", "Deposit successful!")
 
             except  ValueError:
                 tkinter.messagebox.showerror("Error", "Please enter an amount only!")
@@ -497,7 +497,7 @@ class ATMapp:
                                 change = 'C'+str(row_no)    # change = column value :)
                                 data[change].value = check_newpass
 
-                                # saveee
+                                # saveeee
                                 xl.save("g9db.xlsx")
 
                                 tkinter.messagebox.showinfo('Successful','Password Saved!')
