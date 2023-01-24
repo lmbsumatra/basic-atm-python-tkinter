@@ -1,6 +1,9 @@
 from tkinter import *
 import tkinter.messagebox
 import openpyxl
+from openpyxl import Workbook
+from os import path
+
 root = Tk()
 
 class ATMapp:
@@ -20,7 +23,13 @@ class ATMapp:
     reg2_img = PhotoImage(file = 'button_register (2).png')
     login2_img = PhotoImage(file = 'button_log-in2.png')
 
-    xlfile = "g9db.xlsx"    # file name
+    if (path.exists('g9db.xlsx')):
+        xlfile = "g9db.xlsx"    # file name
+    else:
+        xl = Workbook()
+        xl.save('g9db.xlsx')
+        xlfile = "g9db.xlsx" 
+
     green = '#3aa15c' # color
     red = '#d63a3a'   # color
     font = "Times New Roman"    # font
@@ -155,7 +164,7 @@ class ATMapp:
         LblPassword.place(x=56,y=155) 
 
         
-        Password_entry = Entry(master)  
+        Password_entry = Entry(master, show="*")  
         Password_entry.place(x=250,y=155,width=150)  
 
         #contact number
@@ -188,9 +197,9 @@ class ATMapp:
         LblGender = Label(master, text="Gender",width=20,font=(self.font, 14))  
         LblGender.place(x=47,y=275)
         
-        Gender = IntVar()
-        Radiobutton(master, text="Male",padx = 10, variable=Gender, value=1).place(x=243,y=275)
-        Radiobutton(master, text="Female",padx = 20, variable=Gender, value=2).place(x=310,y=275)  
+        Gender = StringVar()
+        Radiobutton(master, text="Male",padx = 10, variable=Gender, value='male').place(x=243,y=275)
+        Radiobutton(master, text="Female",padx = 20, variable=Gender, value='female').place(x=310,y=275)  
 
         def PopUp():
             if toggle.get() == 1:
@@ -215,29 +224,50 @@ class ATMapp:
             reg_gender = Gender.get()
             checked = toggle.get()
 
+            xl = openpyxl.load_workbook("g9db.xlsx")
+            data = xl.active
+            acct_column = data['A']
+            # name_column = data['B']
+            account = False
+            for x in acct_column: 
+                if x.value == reg_id:
+                    account = True
             
-            if not ((reg_id == '') or (reg_name == '') or (reg_pw== '') or (reg_age == '') or (reg_gender == 0) or (checked == 0) or (reg_bal == '') or (reg_no == '')):
-                if reg_pw.isdigit() and reg_bal.isdigit() and reg_no.isdigit():
-                    if (len(reg_pw) == 5):
-                        if (len(reg_no) == 11):
-                            if int(reg_age) > 17:
-                                tkinter.messagebox.showinfo("Successful","Registration Completed!")
+            if not ((reg_id == '') or (reg_name == '') or (reg_pw== '') or (reg_age == '') or (reg_gender == '') or (checked == 0) or (reg_bal == '') or (reg_no == '')):
+                if not(account):
+                    if reg_pw.isdigit() and reg_bal.isdigit() and reg_no.isdigit():
+                        if (len(reg_pw) == 5):
+                            if (len(reg_no) == 11):
+                                if int(reg_age) > 17:
+                                    
+                                    reg_data.append(Id_entry.get())
+                                    reg_data.append(Fullname_entry.get())
+                                    reg_data.append(Password_entry.get())
+                                    reg_data.append(Num_entry.get())
+                                    reg_data.append(Age_entry.get())
+                                    reg_data.append(Bal_entry.get())
+                                    reg_data.append(Gender.get())
 
-                                reg_data.append(Id_entry.get())
-                                reg_data.append(Fullname_entry.get())
-                                reg_data.append(Password_entry.get())
-                                reg_data.append(Num_entry.get())
-                                reg_data.append(Age_entry.get())
-                                reg_data.append(Bal_entry.get())
-                                reg_data.append(Gender.get())
+                                    # open xl
+                                    xl = openpyxl.load_workbook("g9db.xlsx")
+                                    data = xl.active
+                                    data.append(reg_data)
+                                    # saveeee
+                                    xl.save("g9db.xlsx")
+
+                                    tkinter.messagebox.showinfo("Successful","Registration Completed!")
+
+                                    
+                                else:
+                                    tkinter.messagebox.showinfo("Warning","You must 18+ to register.")
                             else:
-                                tkinter.messagebox.showinfo("Warning","You must 18+ to register.")
+                                tkinter.messagebox.showinfo("Warning","Contact Number must be 11 digits.")
                         else:
-                            tkinter.messagebox.showinfo("Warning","Contact Number must be 11 digits.")
+                            tkinter.messagebox.showinfo("Warning","For PASSWORD: Please enter 5 DIGITS only.")
                     else:
                         tkinter.messagebox.showinfo("Warning","For PASSWORD: Please enter 5 DIGITS only.")
                 else:
-                    tkinter.messagebox.showinfo("Warning","For PASSWORD: Please enter 5 DIGITS only.")
+                    tkinter.messagebox.showinfo("Failed","Account already exists.")
             else:
                 tkinter.messagebox.showinfo("Failed","Please complete the registration")
             
@@ -353,7 +383,7 @@ class ATMapp:
         amount = StringVar()
 
         acca = 0
-        acca = acca + balance
+        acca = acca + int(balance)
 
         def deposit():
             try:
@@ -485,8 +515,8 @@ class ATMapp:
                 tkinter.messagebox.showinfo('Failed','Current Password/New Password is empty.')   
 
         # note after chaging the password
-        notelbl = Label(master, text = "After changing your password, select CONTINUE.", font = ("Times New Roman", 14))
-        notelbl.place(x = 80, y = 280)
+        notelbl = Label(master, text = "Simply click CONTINUE once you've \nmodified your password (or not).", font = ("Times New Roman", 14))
+        notelbl.place(x = 100, y = 260)
 
         # continue button to option page
         cont_btn = Button(master, image = self.cont_img,
