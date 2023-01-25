@@ -19,12 +19,20 @@ root = Tk()
 class ATMapp:
 
     # check if file exists, create one if not
-    if (path.exists('g9db.xlsx')):
+    if (path.exists('/home/icy/atm-proj-just-incase')):
         xlfile = "g9db.xlsx"    # file name
     else:
         xl = Workbook()
-        xl.save('g9db.xlsx')
-        xlfile = "g9db.xlsx" 
+        xl.save('/home/icy/atm-proj-just-incase')
+        xlfile = '/home/icy/atm-proj-just-incase'
+        
+    # other computer, diff directory
+    # if (path.exists('g9db.xlsx')):
+    #     xlfile = "g9db.xlsx"    # file name
+    # else:
+    #     xl = Workbook()
+    #     xl.save('g9db.xlsx')
+    #     xlfile = 'g9db.xlsx'
 
     green = '#3aa15c' # color
     red = '#d63a3a'   # color
